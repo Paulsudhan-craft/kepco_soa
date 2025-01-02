@@ -1,0 +1,69 @@
+<style>
+	.print-format {
+		padding: 4mm;
+		font-size: 8.0pt !important;
+	}
+	.print-format td {
+		vertical-align:middle !important;
+	}
+	</style>
+
+	<h2 class="text-center" style="margin-top:0">{%= __(report.report_name) %}</h2>
+
+    <h4 class="text-center"><i>{%= filters.company %}</i></h4>
+    <p class="text-center">P.O Box 61397, Riyadh 11565. KSA,Jeddah: 012-280 7839-Dammam:</p>
+    <h4 class="text-center"><i>Sub-Ledger DELMON CHEMICAL IND. FACTORY - JEDDAH</i></h4>
+
+	<h5 class="text-center">
+		{%= __(filters.ageing_based_on) %}
+		{%= __("Until") %}
+		{%= frappe.datetime.str_to_user(filters.report_date) %}
+	</h5>
+
+	<div class="clearfix">
+		<div class="pull-left">
+		{% if(filters.payment_terms) { %}
+			<strong>{%= __("Payment Terms") %}:</strong> {%= filters.payment_terms %}
+		{% } %}
+		</div>
+		<div class="pull-right">
+		{% if(filters.credit_limit) { %}
+			<strong>{%= __("Credit Limit") %}:</strong> {%= format_currency(filters.credit_limit) %}
+		{% } %}
+		</div>
+	</div>
+
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th style="width: 10%;">{%= __("Date") %}</th>
+				<th style="width: 24%;">{%= __("Voucher") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("Reference No") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("Balance") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("< 30") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("30 - 60") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("60 - 90") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("90 - 120") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("120 - Above") %}</th>
+				<th style="width: 10%; text-align: right;">{%= __("Due Days") %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for(var i = 0, l = data.length; i < l; i++) { %}
+				<tr>
+					<td>{%= frappe.datetime.str_to_user(data[i]["posting_date"]) %}</td>
+					<td>{%= data[i]["voucher_type"] %}<br>{%= data[i]["voucher_no"] %}</td>
+					<td style="text-align: right;">{%= data[i]["po_no"] %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["balance"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["range1"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["range2"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["range3"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["range4"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i]["range5"], data[i]["currency"]) %}</td>
+					<td style="text-align: right;">{%= data[i]["age"] %}</td>
+				</tr>
+			{% } %}
+		</tbody>
+	</table>
+	
+	<p class="text-right text-muted">{{ __("Printed On ") }}{%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
